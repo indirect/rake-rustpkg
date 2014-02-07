@@ -4,9 +4,11 @@ Rustpkg was deprecated and removed, but I already had a project set up to use it
 
 ## Usage
 
+Copy `Rakefile` into the root of your rustpkg-layout directory. Run `rake -T` to see a list of tasks you can run.
+
 ```
-$ rake build
-$ rake test
+$ rake build:crate
+$ rake test:crate
 $ ./bin/crate
 ```
 
