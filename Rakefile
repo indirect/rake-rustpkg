@@ -6,7 +6,7 @@ task :test
 desc "Build everything"
 task :build
 
-def lib(name)
+def build_lib_tasks(name)
   librs  = File.join("src", name, "lib.rs")
   return unless File.exist?(librs)
 
@@ -21,8 +21,8 @@ def lib(name)
   multitask :build => "build:#{name}"
 end
 
-def build(name)
-  lib(name)
+def build_tasks(name)
+  build_lib_tasks(name)
 
   mainrs = File.join("src", name, "main.rs")
   return unless File.exist?(mainrs)
@@ -39,7 +39,7 @@ def build(name)
   multitask :build => "build:#{name}"
 end
 
-def test(name)
+def test_tasks(name)
   testrs = File.join("src", name, "test.rs")
   return unless File.exist?(testrs)
 
@@ -65,8 +65,8 @@ end
 
 FileList['src/*'].each do |path|
   name = path.split('/').last
-  build(name)
-  test(name)
+  build_tasks(name)
+  test_tasks(name)
 end
 
 task :clean do
