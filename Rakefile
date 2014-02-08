@@ -18,7 +18,7 @@ def lib(name)
     desc "Build #{name} crate"
     task name => lib
   end
-  task :build => "build:#{name}"
+  multitask :build => "build:#{name}"
 end
 
 def build(name)
@@ -36,7 +36,7 @@ def build(name)
     desc "Build #{name} binary"
     task name => mainbin
   end
-  task :build => "build:#{name}"
+  multitask :build => "build:#{name}"
 end
 
 def test(name)
@@ -54,7 +54,7 @@ def test(name)
     task(name => testbin) { sh testbin }
   end
 
-  task :test => "test:#{name}"
+  multitask :test => "test:#{name}"
 end
 
 # A regular directory("test") conflicts with the
