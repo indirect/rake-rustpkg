@@ -44,7 +44,7 @@ def test(name)
   return unless File.exist?(testrs)
 
   testbin = File.join("test", name)
-  file testbin => testrs do
+  file testbin => [:ensure_test_dir, testrs] do
     sh "rustc", testrs, "-o", "test/#{name}", "--test"
   end
   task "build:#{name}" => testbin
@@ -55,6 +55,12 @@ def test(name)
   end
 
   task :test => "test:#{name}"
+end
+
+# A regular directory("test") conflicts with the
+# test task, so I'm doing this instead. o_O
+task :ensure_test_dir do
+  mkdir_p "test" unless File.exists?("test")
 end
 
 FileList['src/*'].each do |path|
