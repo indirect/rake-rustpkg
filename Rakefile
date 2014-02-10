@@ -70,5 +70,5 @@ FileList['src/*'].each do |path|
 end
 
 task :clean do
-  FileList['lib/*.{rlib,d}', 'test/*'].each { |f| rm_rf(f) }
+  FileList['lib/**/*.rlib', 'test/*'].each { |f| rm_rf(f) }
 end
