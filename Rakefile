@@ -10,14 +10,20 @@ def libs_tasks(name)
   librs  = File.join("src", name, "lib.rs")
   return unless File.exist?(librs)
 
-  lib = "lib/" << `rustc --crate-file-name #{librs}`.chomp
-  file lib => librs do
-    sh "rustc", librs, "--out-dir", "lib"
+  arch = `rustc -v | tail -n1 | awk '{ print $2 }'`.chomp
+  path = File.join("lib", arch)
+  file = `rustc --crate-file-name #{librs}`.chomp
+  libf = File.join(path, file)
+
+  file libf => librs do
+    sh "rustc", librs, "--out-dir", path
   end
+
   namespace :build do
     desc "Build #{name} crate"
-    task name => lib
+    task name => libf
   end
+
   multitask :build => "build:#{name}"
 end
 
@@ -26,6 +32,7 @@ def main_tasks(name)
   return unless File.exist?(mainrs)
 
   mainbin = File.join("bin", name)
+
   file mainbin => mainrs do
     sh "rustc", mainrs, "-o", mainbin
   end
@@ -34,6 +41,7 @@ def main_tasks(name)
     desc "Build #{name} binary"
     task name => mainbin
   end
+
   multitask :build => "build:#{name}"
 end
 
