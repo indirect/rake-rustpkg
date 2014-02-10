@@ -50,7 +50,7 @@ def test_tasks(name)
   return unless File.exist?(testrs)
 
   testbin = File.join("test", name)
-  file testbin => [:test_dir, testrs] do
+  file testbin => ["test/", testrs] do
     sh "rustc", testrs, "-o", "test/#{name}", "--test"
   end
   task "build:#{name}" => testbin
@@ -65,7 +65,7 @@ end
 
 # A regular directory("test") conflicts with the
 # test task, so I'm doing this instead. o_O
-task :test_dir do
+task "test/" do
   mkdir_p "test" unless File.exists?("test")
 end
 
