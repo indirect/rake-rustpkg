@@ -68,11 +68,27 @@ task "test/" do
   mkdir_p "test" unless File.exists?("test")
 end
 
+def deps_tasks(name)
+  %w(lib.rs main.rs test.rs).map do |file|
+    src = File.join("src", name, file)
+
+    next unless File.exist?(src)
+    deps = File.read(src).scan(/extern mod (.*);/).flatten
+    deps -= %w(extra std) # we don't build these
+    next unless deps.any?
+
+    name = (file == "test.rs") ? "test:#{name}" : "build:#{name}"
+    outf = Rake::Task[name].prerequisites.first
+    task outf => deps.map{|n| "build:#{n}" }
+  end
+end
+
 FileList['src/*'].each do |path|
   name = path.split('/').last
   main_tasks(name)
   libs_tasks(name)
   test_tasks(name)
+  deps_tasks(name)
 end
 
 task :clean do
