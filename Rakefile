@@ -53,7 +53,6 @@ def test_tasks(name)
   file testbin => ["test/", testrs] do
     sh "rustc", testrs, "-o", "test/#{name}", "--test"
   end
-  task "build:#{name}" => testbin
 
   namespace :test do
     desc "Test #{name} crate"
